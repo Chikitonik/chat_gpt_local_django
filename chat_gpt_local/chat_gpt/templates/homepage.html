@@ -1,0 +1,87 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <form method="post" enctype="multipart/form-data" id="queryForm">
+    {% csrf_token %}
+    <!-- Display the preview of 'C:/dev/chat_gpt_local_django/chat_gpt_local/chat_gpt/media/data.txt' -->
+    {% load custom_filters %}
+    <h2>Preview of previous file</h2>
+    <pre class="border p-2">
+{{ DESTINATION_PATH_FILE_DATA|read_file|linebreaksbr }}</pre
+    >
+
+    <div class="form-group">
+      <label for="data">Select a txt file for analisys:</label>
+      <input
+        type="file"
+        class="form-control-file"
+        id="data"
+        name="data"
+        accept=".txt"
+        onchange="updateData()"
+      />
+    </div>
+
+    <h2>Preview of File:</h2>
+    <pre id="filePreview" class="border p-2">
+  No file selected, the <b>copy</b> of previous file will be analized</pre
+    >
+
+    <h2>Query</h2>
+    <div class="form-group">
+      <textarea
+        id="query"
+        name="query"
+        class="form-control"
+        rows="4"
+        cols="50"
+        required
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <input type="submit" class="btn btn-primary" value="Submit Query" />
+    </div>
+  </form>
+
+  <h2>Query was</h2>
+  <div class="alert alert-info">{{ query }}</div>
+
+  <h2>Answer to query</h2>
+  <div class="alert alert-success">{{ answer }}</div>
+</div>
+
+<script>
+  // JavaScript to update the "Current Data Path" span and preview the file content after file selection
+  function updateData() {
+    var inputElement = document.getElementById("data");
+    var filePath = inputElement.value;
+
+    if (inputElement.files.length > 0) {
+      var selectedFile = inputElement.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function (event) {
+        var fileContent = event.target.result;
+
+        // Display the first few lines of the file content in the "Preview of Selected File"
+        var lines = fileContent.split("\n");
+        var previewLines = lines.slice(0, 5).join("\n");
+        document.getElementById("filePreview").textContent = previewLines;
+      };
+
+      reader.readAsText(selectedFile);
+    } else {
+      // If no file is selected, display a default message
+      document.getElementById("filePreview").textContent =
+        "No file selected or error reading file.";
+    }
+  }
+
+  document
+    .getElementById("queryForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+      this.submit();
+    });
+</script>
+
+{% endblock %}

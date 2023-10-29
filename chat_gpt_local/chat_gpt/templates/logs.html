@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Your Query Logs:</h2>
+  <ul class="list-group">
+    {% for log in user_logs %}
+    <li class="list-group-item">
+      <strong>{{ log.timestamp }}</strong>
+      <p>Filename: {{ log.file_name }}</p>
+      <p class="alert alert-info">Query: {{ log.query }}</p>
+      <p class="alert alert-success">Answer: {{ log.answer }}</p>
+    </li>
+    {% empty %}
+    <li class="list-group-item">No query logs available.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

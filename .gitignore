@@ -1,0 +1,51 @@
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore database files
+*.sqlite3
+db.sqlite3
+
+# Ignore media and static files
+# media/
+# static/
+
+# Ignore environment-specific settings
+*.env
+
+# Ignore IDE specific files
+.vscode/
+.idea/
+
+# Ignore compiled files and directories
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore logs and temporary files
+*.log
+*.swp
+*.swo
+
+# Ignore environment directory (virtualenv or venv)
+venv/
+env/
+.venv/
+
+# Ignore sensitive or local configuration
+secret_key.txt
+settings/local_settings.py
+constants.py
+
+# Ignore migrations
+**/migrations/
+
+# Ignore Docker specific files
+Dockerfile
+docker-compose.yml
+
+# Ignore Python package build and distribution directories
+dist/
+build/
+*.egg-info/
