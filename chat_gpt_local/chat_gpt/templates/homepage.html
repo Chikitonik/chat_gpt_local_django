@@ -6,7 +6,11 @@
     {% load custom_filters %}
     <h2>Preview of previous file</h2>
     <pre class="border p-2">
-{{ DESTINATION_PATH_FILE_DATA|read_file|linebreaksbr }}</pre
+      {% if DESTINATION_PATH_FILE_DATA != 'No previous file' %}
+      {{ DESTINATION_PATH_FILE_DATA|read_file|linebreaksbr }}
+    {% else %}
+      {{ DESTINATION_PATH_FILE_DATA }}
+    {% endif %}</pre
     >
 
     <div class="form-group">

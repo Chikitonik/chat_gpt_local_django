@@ -24,20 +24,22 @@ def home(request):
             settings.BASE_DIR, RELATIVE_DATA_DIR, str(current_user.id))
         os.makedirs(user_data_dir, exist_ok=True)
         user_data_file = os.path.join(user_data_dir, 'data.txt')
-        # print('=============user_data_file===========')
-        # print(user_data_file)
+        if not os.path.exists(user_data_file):
+            user_data_file = "No previous file"
 
         context = {
             # 'api_key': api_key,
             # 'DESTINATION_PATH_FILE_DATA': DESTINATION_PATH_FILE_DATA,
             'DESTINATION_PATH_FILE_DATA': user_data_file,
         }
+
         try:
 
             user_profile = request.user.userprofile
             api_key = user_profile.api_key
             context = {
                 'api_key': api_key,
+                'DESTINATION_PATH_FILE_DATA': user_data_file,
             }
             # data_path = ''
             answer = ''
@@ -56,21 +58,20 @@ def home(request):
                             file.write(new_data_information)
                     except Exception as e:
                         print(f"Error writing to the file: {str(e)}")
-                # try:
-                    # os.environ["OPENAI_API_KEY"] = api_key
-                    # #loader = TextLoader(
-                    # #    user_data_file, encoding='utf-8')
+                try:
+                    os.environ["OPENAI_API_KEY"] = api_key
                     # loader = TextLoader(
                     #    user_data_file, encoding='utf-8')
-                    # # loader = DirectoryLoader(
-                    # # 'C:/dev/chat_gpt_local_django/chat_gpt_local/chat_gpt/media/', glob="*.txt")
-                    # index = VectorstoreIndexCreator().from_loaders([loader])
-                    # answer = index.query(query)
-                # except Exception as e:
-                #     answer = f'ERROR: {str(e)}'
+                    loader = TextLoader(
+                        user_data_file, encoding='utf-8')
+                    # loader = DirectoryLoader(
+                    # 'C:/dev/chat_gpt_local_django/chat_gpt_local/chat_gpt/media/', glob="*.txt")
+                    index = VectorstoreIndexCreator().from_loaders([loader])
+                    answer = index.query(query)
+                except Exception as e:
+                    answer = f'ERROR: {str(e)}'
 
-            # if answer != '':
-                if answer == '':
+                if answer != '':
                     if not file_name:
                         try:
                             # with open(DESTINATION_PATH_FILE_DATA, 'r', encoding='utf-8') as file:
@@ -90,7 +91,6 @@ def home(request):
                     # 'DESTINATION_PATH_FILE_DATA': DESTINATION_PATH_FILE_DATA,
                     'DESTINATION_PATH_FILE_DATA': user_data_file,
                 }
-
             return render(request, 'homepage.html', context)
         except UserProfile.DoesNotExist:
             # Handle the case where the user profile doesn't exist
